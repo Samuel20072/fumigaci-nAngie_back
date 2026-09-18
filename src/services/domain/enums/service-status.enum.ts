@@ -1,0 +1,5 @@
+export enum ServiceStatus {
+  PROGRAMADO = 'PROGRAMADO',
+  REALIZADO = 'REALIZADO',
+  CANCELADO = 'CANCELADO',
+}
