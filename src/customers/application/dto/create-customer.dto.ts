@@ -6,6 +6,7 @@ import {
   MaxLength,
   MinLength,
   Matches,
+  IsBoolean,
 } from 'class-validator';
 
 export class CreateCustomerDto {
@@ -45,4 +46,9 @@ export class CreateCustomerDto {
   @IsString()
   @MaxLength(500)
   notes?: string;
+
+  @ApiPropertyOptional({ description: 'Estado inicial del cliente', default: true })
+  @IsOptional()
+  @IsBoolean()
+  isActive?: boolean;
 }

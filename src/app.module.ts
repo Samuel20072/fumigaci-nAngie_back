@@ -7,6 +7,7 @@ import { CustomersModule } from './customers/customers.module.js';
 import { ServicesModule } from './services/services.module.js';
 import { DashboardModule } from './dashboard/dashboard.module.js';
 import { HealthModule } from './health/health.module.js';
+import { ExpensesModule } from './expenses/expenses.module.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -42,6 +43,7 @@ const __dirname = dirname(__filename);
     CustomersModule,
     ServicesModule,
     DashboardModule,
+    ExpensesModule,
     HealthModule,
   ],
 })

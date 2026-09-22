@@ -25,7 +25,7 @@ export class CreateCustomerUseCase {
       neighborhood: dto.neighborhood,
       city: dto.city,
       notes: dto.notes,
-      isActive: true,
+      isActive: dto.isActive ?? true,
     });
 
     return CustomerResponseDto.fromEntity(customer);

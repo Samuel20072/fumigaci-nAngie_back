@@ -7,12 +7,19 @@ import { AllExceptionsFilter } from './shared/presentation/filters/all-exception
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  const extraOrigins = process.env['CORS_ORIGIN']
+    ? process.env['CORS_ORIGIN'].split(',').map((o) => o.trim())
+    : [];
+
   app.enableCors({
     origin: [
       'http://localhost:4200',
       'http://localhost:8100',
+      'http://localhost',
+      'https://localhost',
       'capacitor://localhost',
       'ionic://localhost',
+      ...extraOrigins,
     ],
     methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS'],
     allowedHeaders: ['Content-Type', 'Authorization'],
