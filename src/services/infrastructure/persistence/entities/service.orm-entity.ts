@@ -34,6 +34,9 @@ export class ServiceOrmEntity extends BaseOrmEntity {
   @Column({ type: 'text', nullable: true })
   notes: string;
 
+  @Column({ name: 'service_time', length: 10, nullable: true })
+  serviceTime?: string;
+
   @Column({ name: 'parent_service_id', nullable: true })
   parentServiceId: string;
 

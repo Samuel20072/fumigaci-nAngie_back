@@ -14,4 +14,5 @@ export abstract class IServiceRepository {
   abstract exists(id: string): Promise<boolean>;
   abstract countByType(): Promise<{ fumigacion: number; repaso: number }>;
   abstract countTotal(): Promise<number>;
+  abstract delete(id: string): Promise<void>;
 }

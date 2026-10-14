@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, LessThan, Between } from 'typeorm';
 import { ServiceOrmEntity } from '../entities/service.orm-entity.js';
@@ -25,6 +25,7 @@ export class ServiceRepository implements IServiceRepository {
     s.price = orm.price;
     s.paymentMethod = orm.paymentMethod;
     s.notes = orm.notes;
+    s.serviceTime = orm.serviceTime;
     s.parentServiceId = orm.parentServiceId;
     s.createdAt = orm.createdAt;
     s.updatedAt = orm.updatedAt;
@@ -119,5 +120,13 @@ export class ServiceRepository implements IServiceRepository {
 
   async countTotal(): Promise<number> {
     return this.repo.count();
+  }
+
+  async delete(id: string): Promise<void> {
+    await this.repo.update({ parentServiceId: id }, { parentServiceId: null as any });
+    const res = await this.repo.delete(id);
+    if (res.affected === 0) {
+      throw new NotFoundException(`Servicio con ID ${id} no encontrado`);
+    }
   }
 }

@@ -11,6 +11,7 @@ import { ListServicesUseCase } from './application/use-cases/list-services.use-c
 import { GetExpiringServicesUseCase } from './application/use-cases/get-expiring-services.use-case.js';
 import { GetExpiredServicesUseCase } from './application/use-cases/get-expired-services.use-case.js';
 import { GetServicesByCustomerUseCase } from './application/use-cases/get-services-by-customer.use-case.js';
+import { DeleteServiceUseCase } from './application/use-cases/delete-service.use-case.js';
 import { ServicesController } from './presentation/services.controller.js';
 import { CustomersModule } from '../customers/customers.module.js';
 
@@ -27,6 +28,7 @@ import { CustomersModule } from '../customers/customers.module.js';
     GetExpiringServicesUseCase,
     GetExpiredServicesUseCase,
     GetServicesByCustomerUseCase,
+    DeleteServiceUseCase,
   ],
   exports: [IServiceRepository, ExpirationService],
 })

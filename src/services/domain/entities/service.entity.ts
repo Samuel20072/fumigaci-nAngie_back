@@ -14,6 +14,7 @@ export class Service {
   price?: number;
   paymentMethod?: string;
   notes?: string;
+  serviceTime?: string;
   parentServiceId?: string; // Repaso → Fumigación padre
   createdAt: Date;
   updatedAt: Date;

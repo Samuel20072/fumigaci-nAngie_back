@@ -18,6 +18,7 @@ import { ListServicesUseCase } from '../application/use-cases/list-services.use-
 import { GetExpiringServicesUseCase } from '../application/use-cases/get-expiring-services.use-case.js';
 import { GetExpiredServicesUseCase } from '../application/use-cases/get-expired-services.use-case.js';
 import { GetServicesByCustomerUseCase } from '../application/use-cases/get-services-by-customer.use-case.js';
+import { DeleteServiceUseCase } from '../application/use-cases/delete-service.use-case.js';
 import { CreateServiceDto } from '../application/dto/create-service.dto.js';
 import { UpdateServiceDto } from '../application/dto/update-service.dto.js';
 import { ServiceResponseDto } from '../application/dto/service-response.dto.js';
@@ -35,6 +36,7 @@ export class ServicesController {
     private readonly getExpiring: GetExpiringServicesUseCase,
     private readonly getExpired: GetExpiredServicesUseCase,
     private readonly getByCustomer: GetServicesByCustomerUseCase,
+    private readonly deleteService: DeleteServiceUseCase,
     private readonly serviceRepository: IServiceRepository,
   ) {}
 
@@ -89,10 +91,19 @@ export class ServicesController {
     return this.updateService.execute(id, dto);
   }
 
+  @Patch(':id/cancel')
+  @ApiOperation({ summary: 'Cancelar servicio' })
+  @ApiResponse({ status: 200, type: ServiceResponseDto })
+  cancel(@Param('id', ParseUUIDPipe) id: string) {
+    return this.updateService.execute(id, { status: ServiceStatus.CANCELADO });
+  }
+
   @Delete(':id')
   @HttpCode(HttpStatus.NO_CONTENT)
-  @ApiOperation({ summary: 'Cancelar servicio' })
-  async cancel(@Param('id', ParseUUIDPipe) id: string) {
-    await this.serviceRepository.update(id, { status: ServiceStatus.CANCELADO });
+  @ApiOperation({ summary: 'Eliminar servicio permanentemente' })
+  @ApiResponse({ status: 204, description: 'Servicio eliminado correctamente' })
+  @ApiResponse({ status: 404, description: 'Servicio no encontrado' })
+  remove(@Param('id', ParseUUIDPipe) id: string) {
+    return this.deleteService.execute(id);
   }
 }

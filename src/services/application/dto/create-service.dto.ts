@@ -24,13 +24,20 @@ export class CreateServiceDto {
   @IsEnum(ServiceType, { message: 'El tipo debe ser FUMIGACION o REPASO' })
   type: ServiceType;
 
-  @ApiProperty({ enum: ServiceStatus, description: 'Estado del servicio', example: ServiceStatus.REALIZADO })
+  @ApiPropertyOptional({ enum: ServiceStatus, description: 'Estado del servicio', example: ServiceStatus.PROGRAMADO, default: ServiceStatus.REALIZADO })
+  @IsOptional()
   @IsEnum(ServiceStatus)
-  status: ServiceStatus;
+  status?: ServiceStatus;
 
   @ApiProperty({ description: 'Fecha del servicio', example: '2026-09-15' })
   @IsDateString({}, { message: 'La fecha del servicio no tiene un formato válido' })
   serviceDate: string;
+
+  @ApiPropertyOptional({ description: 'Hora del servicio (formato HH:mm)', example: '14:30' })
+  @IsOptional()
+  @IsString()
+  @MaxLength(10)
+  serviceTime?: string;
 
   @ApiPropertyOptional({ description: 'Fecha de vencimiento del servicio', example: '2026-10-15' })
   @IsOptional()

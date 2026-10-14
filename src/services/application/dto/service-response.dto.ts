@@ -14,6 +14,7 @@ export class ServiceResponseDto {
   @ApiPropertyOptional() price?: number;
   @ApiPropertyOptional() paymentMethod?: string;
   @ApiPropertyOptional() notes?: string;
+  @ApiPropertyOptional() serviceTime?: string;
   @ApiPropertyOptional() parentServiceId?: string;
   @ApiProperty() createdAt: Date;
   @ApiProperty() updatedAt: Date;
@@ -32,6 +33,7 @@ export class ServiceResponseDto {
     dto.price = service.price;
     dto.paymentMethod = service.paymentMethod;
     dto.notes = service.notes;
+    dto.serviceTime = service.serviceTime;
     dto.parentServiceId = service.parentServiceId;
     dto.createdAt = service.createdAt;
     dto.updatedAt = service.updatedAt;

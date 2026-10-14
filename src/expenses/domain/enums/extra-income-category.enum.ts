@@ -1,0 +1,6 @@
+export enum ExtraIncomeCategory {
+  VENTA_PRODUCTOS = 'VENTA_PRODUCTOS',
+  ASESORIA = 'ASESORIA',
+  COMISION = 'COMISION',
+  OTROS = 'OTROS',
+}

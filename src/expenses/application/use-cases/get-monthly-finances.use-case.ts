@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { IExpenseRepository } from '../../domain/repositories/expense.repository.interface.js';
+import { IExtraIncomeRepository } from '../../domain/repositories/extra-income.repository.interface.js';
 import { IServiceRepository } from '../../../services/domain/repositories/service.repository.interface.js';
 import { ServiceStatus } from '../../../services/domain/enums/service-status.enum.js';
 import { ExpenseCategory } from '../../domain/enums/expense-category.enum.js';
@@ -12,6 +13,7 @@ import {
 export class GetMonthlyFinancesUseCase {
   constructor(
     private readonly expenseRepository: IExpenseRepository,
+    private readonly extraIncomeRepository: IExtraIncomeRepository,
     private readonly serviceRepository: IServiceRepository,
   ) {}
 
@@ -28,13 +30,23 @@ export class GetMonthlyFinancesUseCase {
       return sDateStr === targetMonth;
     });
 
-    const totalIncome = monthlyServices.reduce(
+    const servicesIncome = monthlyServices.reduce(
       (sum, s) => sum + (Number(s.price) || 0),
       0,
     );
     const completedServicesCount = monthlyServices.length;
 
-    // 2. Obtener los gastos del mes
+    // 2. Obtener los ingresos extras del mes
+    const monthlyExtraIncomes = await this.extraIncomeRepository.findAll(targetMonth);
+    const extraIncome = monthlyExtraIncomes.reduce(
+      (sum, i) => sum + (Number(i.amount) || 0),
+      0,
+    );
+    const extraIncomesCount = monthlyExtraIncomes.length;
+
+    const totalIncome = servicesIncome + extraIncome;
+
+    // 3. Obtener los gastos del mes
     const monthlyExpenses = await this.expenseRepository.findAll(targetMonth);
     const totalExpenses = monthlyExpenses.reduce(
       (sum, e) => sum + (Number(e.amount) || 0),
@@ -47,7 +59,7 @@ export class GetMonthlyFinancesUseCase {
 
     const netProfit = totalIncome - totalExpenses;
 
-    // 3. Desglose por categoría de gasto
+    // 4. Desglose por categoría de gasto
     const categoryBreakdown: CategoryExpenseBreakdownDto[] = Object.values(
       ExpenseCategory,
     ).map((cat) => {
@@ -73,7 +85,10 @@ export class GetMonthlyFinancesUseCase {
     return {
       month: targetMonth,
       totalIncome,
+      servicesIncome,
       completedServicesCount,
+      extraIncome,
+      extraIncomesCount,
       totalExpenses,
       expensesCount,
       netProfit,

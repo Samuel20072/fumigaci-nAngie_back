@@ -5,6 +5,7 @@ import { CreateServiceDto } from '../dto/create-service.dto.js';
 import { ServiceResponseDto } from '../dto/service-response.dto.js';
 import { ExpirationService } from '../services/expiration.service.js';
 import { ServiceType } from '../../domain/enums/service-type.enum.js';
+import { ServiceStatus } from '../../domain/enums/service-status.enum.js';
 
 @Injectable()
 export class CreateServiceUseCase {
@@ -49,12 +50,13 @@ export class CreateServiceUseCase {
     const service = await this.serviceRepository.create({
       customerId: dto.customerId,
       type: dto.type,
-      status: dto.status,
+      status: dto.status ?? ServiceStatus.REALIZADO,
       serviceDate: new Date(dto.serviceDate),
       expirationDate,
       price: dto.price,
       paymentMethod: dto.paymentMethod,
       notes: dto.notes,
+      serviceTime: dto.serviceTime,
       parentServiceId: dto.parentServiceId,
     });
 
