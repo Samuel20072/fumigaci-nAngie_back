@@ -29,28 +29,46 @@ export class ServiceRepository implements IServiceRepository {
     s.parentServiceId = orm.parentServiceId;
     s.createdAt = orm.createdAt;
     s.updatedAt = orm.updatedAt;
+    if (orm.customer) {
+      s.customer = {
+        id: orm.customer.id,
+        fullName: orm.customer.fullName,
+        phone: orm.customer.phone,
+        address: orm.customer.address,
+        neighborhood: orm.customer.neighborhood,
+        city: orm.customer.city,
+        notes: orm.customer.notes,
+        isActive: orm.customer.isActive,
+        createdAt: orm.customer.createdAt,
+        updatedAt: orm.customer.updatedAt,
+      };
+    }
     return s;
   }
 
   async create(data: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>): Promise<Service> {
     const orm = this.repo.create(data as Partial<ServiceOrmEntity>);
     const saved = await this.repo.save(orm);
-    return this.toDomain(saved);
+    return this.findById(saved.id) as Promise<Service>;
   }
 
   async findById(id: string): Promise<Service | null> {
-    const orm = await this.repo.findOne({ where: { id } });
+    const orm = await this.repo.findOne({ where: { id }, relations: ['customer'] });
     return orm ? this.toDomain(orm) : null;
   }
 
   async findAll(): Promise<Service[]> {
-    const list = await this.repo.find({ order: { serviceDate: 'DESC' } });
+    const list = await this.repo.find({
+      relations: ['customer'],
+      order: { serviceDate: 'DESC' },
+    });
     return list.map((o) => this.toDomain(o));
   }
 
   async findByCustomerId(customerId: string): Promise<Service[]> {
     const list = await this.repo.find({
       where: { customerId },
+      relations: ['customer'],
       order: { serviceDate: 'DESC' },
     });
     return list.map((o) => this.toDomain(o));
@@ -68,6 +86,7 @@ export class ServiceRepository implements IServiceRepository {
         expirationDate: Between(today, limit),
         status: ServiceStatus.REALIZADO,
       },
+      relations: ['customer'],
       order: { expirationDate: 'ASC' },
     });
     return list.map((o) => this.toDomain(o));
@@ -81,6 +100,7 @@ export class ServiceRepository implements IServiceRepository {
         expirationDate: LessThan(today),
         status: ServiceStatus.REALIZADO,
       },
+      relations: ['customer'],
       order: { expirationDate: 'ASC' },
     });
     return list.map((o) => this.toDomain(o));

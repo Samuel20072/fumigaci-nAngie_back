@@ -3,10 +3,12 @@ import { Service } from '../../domain/entities/service.entity.js';
 import { ServiceType } from '../../domain/enums/service-type.enum.js';
 import { ServiceStatus } from '../../domain/enums/service-status.enum.js';
 import { ExpirationStatus } from '../services/expiration.service.js';
+import { CustomerResponseDto } from '../../../customers/application/dto/customer-response.dto.js';
 
 export class ServiceResponseDto {
   @ApiProperty() id: string;
   @ApiProperty() customerId: string;
+  @ApiPropertyOptional({ type: () => CustomerResponseDto }) customer?: CustomerResponseDto;
   @ApiProperty({ enum: ServiceType }) type: ServiceType;
   @ApiProperty({ enum: ServiceStatus }) status: ServiceStatus;
   @ApiProperty() serviceDate: Date;
@@ -39,6 +41,9 @@ export class ServiceResponseDto {
     dto.updatedAt = service.updatedAt;
     dto.expirationStatus = expirationStatus;
     dto.daysRemaining = daysRemaining;
+    if (service.customer) {
+      dto.customer = CustomerResponseDto.fromEntity(service.customer);
+    }
     return dto;
   }
 }

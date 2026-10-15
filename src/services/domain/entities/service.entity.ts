@@ -1,5 +1,6 @@
 import { ServiceType } from '../enums/service-type.enum.js';
 import { ServiceStatus } from '../enums/service-status.enum.js';
+import { Customer } from '../../../customers/domain/entities/customer.entity.js';
 
 /**
  * Entidad de dominio Service — sin decoradores de TypeORM.
@@ -7,6 +8,7 @@ import { ServiceStatus } from '../enums/service-status.enum.js';
 export class Service {
   id: string;
   customerId: string;
+  customer?: Customer;
   type: ServiceType;
   status: ServiceStatus;
   serviceDate: Date;
